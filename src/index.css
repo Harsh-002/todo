@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+.animate-move {
+  animation: move 30s linear infinite forwards;
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(-60%) rotateY(-180deg);
+  }
+  1% {
+    transform: translateX(-60%) rotateY(0deg);
+  }
+  50% {
+    transform: translateX(60%) rotateY(0deg);
+  }
+  51% {
+    transform: translateX(60%) rotateY(-180deg);
+  }
+  100% {
+    transform: translateX(-60%) rotateY(-180deg);
+  }
+}
+
 body {
   background-color: rgb(230, 230, 230);
+  overflow: hidden;
 }

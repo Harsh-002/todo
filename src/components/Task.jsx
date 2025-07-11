@@ -1,6 +1,15 @@
+import { useRef } from "react";
 import { LuCalendar } from "react-icons/lu";
 
-const Task = ({ date, priority, status, title, id, onTitleChange }) => {
+const Task = ({
+  date,
+  priority,
+  status,
+  title,
+  id,
+  onTitleChange,
+  onDateChange,
+}) => {
   const monthOptions = [
     { name: "January", short: "Jan" },
     { name: "February", short: "Feb" },
@@ -15,6 +24,16 @@ const Task = ({ date, priority, status, title, id, onTitleChange }) => {
     { name: "November", short: "Nov" },
     { name: "December", short: "Dec" },
   ];
+
+  const inputRef = useRef();
+
+  const showPicker = () => {
+    if (inputRef.current?.showPicker) {
+      inputRef.current.showPicker();
+    } else {
+      inputRef.current?.click();
+    }
+  };
 
   const formattedDate =
     monthOptions[date.getMonth()].short + " " + date.getDate();
@@ -38,9 +57,20 @@ const Task = ({ date, priority, status, title, id, onTitleChange }) => {
           className="px-1 ml-4 w-full outline-none"
         />
       </div>
-      <div className="text-gray-500 font-bold flex-1 flex items-center justify-center">
-        <LuCalendar className="cursor-pointer text-lg" />
+      <div
+        onClick={showPicker}
+        className="text-gray-500 font-bold flex-1 flex items-center justify-center cursor-pointer relative"
+      >
+        <LuCalendar className="text-lg" />
         <p className="pl-4">{formattedDate}</p>
+        <input
+          ref={inputRef}
+          id={id}
+          name="date"
+          type="date"
+          className="opacity-0 absolute bottom-0 left-0 w-0 h-0"
+          onChange={(e) => onDateChange(id, e.target.valueAsDate)}
+        />
       </div>
       <div className={`flex-1 flex items-center justify-center`}>
         <p

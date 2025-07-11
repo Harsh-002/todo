@@ -13,6 +13,15 @@ const TaskList = ({ tasks, setTasks }) => {
     );
   };
 
+  const handleDateChange = (id, newDate) => {
+    console.log(id, tasks);
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, date: newDate } : task
+      )
+    );
+  };
+
   if (tasks.length > 0) {
     tasks.map((task) => {
       rows.push(
@@ -24,6 +33,7 @@ const TaskList = ({ tasks, setTasks }) => {
           status={task.status}
           title={task.title}
           onTitleChange={handleTitleChange}
+          onDateChange={handleDateChange}
         />
       );
     });

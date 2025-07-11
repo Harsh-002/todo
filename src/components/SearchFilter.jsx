@@ -4,7 +4,7 @@ const SearchFilter = () => {
   const [searchValue, setSearchValue] = useState("");
 
   return (
-    <div className="w-1/2 h-12">
+    <div className="w-1/2 h-12 z-20">
       <input
         className="rounded-xl w-full h-full p-3 bg-gray-100 shadow outline-none"
         type="text"

@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import dinosaur from "../assets/lotties/dinosaur.json";
 import sloth from "../assets/lotties/sloth.json";
 import camel from "../assets/lotties/camel.json";
-import Lottie from "lottie-react";
 
-const Greet = () => {
+const Greet = ({ setAnimation }) => {
   const [hours, setHours] = useState(new Date().getHours());
   const [greet, setGreet] = useState("");
-  const [animation, setAnimation] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,16 +26,11 @@ const Greet = () => {
       setGreet("Good evening");
       setAnimation(dinosaur);
     }
-  }, [hours]);
+  }, [hours, setAnimation]);
 
   return (
     <div className="text-center text-2xl m-4 font-bold flex items-center justify-center">
-      <div className="relative">
-        {greet}
-        <div className="w-25 absolute left-full -bottom-[140%]">
-          <Lottie animationData={animation} />
-        </div>
-      </div>
+      {greet}
     </div>
   );
 };
