@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { LuCalendar } from "react-icons/lu";
+import { LuCalendar, LuCheck } from "react-icons/lu";
 
 const Task = ({
   date,
@@ -9,6 +9,8 @@ const Task = ({
   id,
   onTitleChange,
   onDateChange,
+  selected,
+  onTaskSelect,
 }) => {
   const monthOptions = [
     { name: "January", short: "Jan" },
@@ -27,6 +29,7 @@ const Task = ({
 
   const inputRef = useRef();
 
+  // Function to show date picker on clicking on date
   const showPicker = () => {
     if (inputRef.current?.showPicker) {
       inputRef.current.showPicker();
@@ -41,12 +44,12 @@ const Task = ({
   return (
     <div className="flex w-full justify-between py-2 border-b border-b-gray-300">
       <div className="flex text-gray-700 flex-5">
-        <input
-          type="checkbox"
-          name="task"
-          id={`task-${id}`}
-          className="self-start my-2"
-        />
+        <div
+          onClick={() => onTaskSelect(id)}
+          className="h-5 w-5 my-2 border rounded-md cursor-pointer flex items-center justify-center"
+        >
+          {selected ? <LuCheck /> : ""}
+        </div>
         <input
           type="text"
           name="title"

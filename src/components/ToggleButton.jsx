@@ -1,14 +1,14 @@
 import { LuSun } from "react-icons/lu";
 import { LuMoon } from "react-icons/lu";
-import { useContext } from "react";
+import { useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 
 const ToggleButton = () => {
-  const darkMode = useContext(DarkModeContext);
+  const [darkMode, setDarkMode] = useState(false);
 
   return (
     <div
-      onClick={() => darkMode}
+      onClick={() => setDarkMode(!darkMode)}
       className={`w-14 h-7 border-2 border-white shadow-gray-400 shadow rounded-4xl flex items-center p-0.5 cursor-pointer relative transition-colors ${
         darkMode ? "bg-gray-800" : "bg-amber-500"
       }`}
