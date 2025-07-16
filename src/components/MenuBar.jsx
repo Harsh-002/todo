@@ -8,7 +8,7 @@ const MenuBar = () => {
   const [animation, setAnimation] = useState(null);
 
   return (
-    <div className="flex flex-col items-center w-full z-10">
+    <div className="relative flex h-34 flex-col items-center justify-center max-w-lvw z-10 overflow-hidden">
       <Lottie
         className="absolute left-0 top-0 h-40 w-full max-w-none animate-move"
         animationData={animation}

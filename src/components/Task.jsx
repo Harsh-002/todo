@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { LuCalendar, LuCheck } from "react-icons/lu";
 
 const Task = ({
@@ -11,6 +11,7 @@ const Task = ({
   onDateChange,
   selected,
   onTaskSelect,
+  onPriorityChange,
 }) => {
   const monthOptions = [
     { name: "January", short: "Jan" },
@@ -28,6 +29,8 @@ const Task = ({
   ];
 
   const inputRef = useRef();
+
+  const [visible, setVisible] = useState(false);
 
   // Function to show date picker on clicking on date
   const showPicker = () => {
@@ -75,8 +78,9 @@ const Task = ({
           onChange={(e) => onDateChange(id, e.target.valueAsDate)}
         />
       </div>
-      <div className={`flex-1 flex items-center justify-center`}>
+      <div className={`flex-1 flex items-center justify-center relative`}>
         <p
+          onClick={() => setVisible(!visible)}
           className={`${
             priority === "low"
               ? "bg-green-300 text-green-800"
@@ -87,6 +91,28 @@ const Task = ({
         >
           {priority}
         </p>
+        <div className={`absolute z-50 top-full ${visible ? "" : "hidden"}`}>
+          <ul className="list-none bg-gray-100 border rounded-md overflow-hidden shadow-lg">
+            <li
+              onClick={() => onPriorityChange(id, "low")}
+              className="px-7 cursor-pointer text-green-800 hover:bg-green-300 py-1"
+            >
+              low
+            </li>
+            <li
+              onClick={() => onPriorityChange(id, "mid")}
+              className="px-7 cursor-pointer text-amber-800 hover:bg-amber-300 py-1"
+            >
+              mid
+            </li>
+            <li
+              onClick={() => onPriorityChange(id, "high")}
+              className="px-7 cursor-pointer text-red-800 hover:bg-red-300 py-1"
+            >
+              high
+            </li>
+          </ul>
+        </div>
       </div>
       <div className="text-gray-700 flex-1 flex items-center justify-center">
         <p

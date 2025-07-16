@@ -2,10 +2,11 @@ import Task from "./Task";
 import Lottie from "lottie-react";
 import empty from "../assets/lotties/empty.json";
 import { saveToLocalStorage } from "../services/localStorage";
-import { LuTrash2 } from "react-icons/lu";
+import { LuCheck, LuTrash2 } from "react-icons/lu";
+import { useEffect, useState } from "react";
 
 const TaskList = ({ tasks, setTasks }) => {
-  const rows = [];
+  const [selectAll, setSelectAll] = useState(false);
 
   // Function to change title of task and saving it to local storage on every key stroke
   const handleTitleChange = (id, newTitle) => {
@@ -34,6 +35,18 @@ const TaskList = ({ tasks, setTasks }) => {
     saveToLocalStorage(updatedTasks);
   };
 
+  // Function to select and unselect all tasks
+  const handleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    const updatedTasks = tasks.map((task) => ({
+      ...task,
+      selected: newSelectAll,
+    }));
+    setSelectAll(newSelectAll);
+    setTasks(updatedTasks);
+    saveToLocalStorage(updatedTasks);
+  };
+
   // Function to delete selected tasks
   const handleDeleteTasks = () => {
     const updatedTasks = tasks.filter((task) => !task.selected);
@@ -43,29 +56,30 @@ const TaskList = ({ tasks, setTasks }) => {
 
   // Function to check if any task is selected to show and hide buttons like delete
   const checkSelected = () => {
-    console.log("Function check selected");
     return tasks.some((task) => task.selected);
   };
 
-  // Rendering all tasks if tasks are not null else return an empty animation
-  if (tasks.length > 0) {
-    tasks.map((task) => {
-      rows.push(
-        <Task
-          key={task.id}
-          id={task.id}
-          date={task.date}
-          priority={task.priority}
-          status={task.status}
-          title={task.title}
-          selected={task.selected}
-          onTitleChange={handleTitleChange}
-          onDateChange={handleDateChange}
-          onTaskSelect={handleTaskSelect}
-        />
-      );
-    });
-  } else {
+  // to check if every task is selected or not
+  useEffect(() => {
+    if (tasks.length > 0 && tasks.every((task) => task.selected)) {
+      setSelectAll(true);
+    } else {
+      setSelectAll(false);
+    }
+  }, [tasks]);
+
+  // handle Priority change
+  const handlePriorityChange = (id, value) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, priority: value } : task
+    );
+
+    setTasks(updatedTasks);
+    saveToLocalStorage(updatedTasks);
+  };
+
+  // Rendering an empty animation
+  if (tasks.length === 0) {
     return (
       <div className="h-1/4 w-full flex flex-col items-center justify-center">
         <Lottie animationData={empty} loop={true} />
@@ -81,6 +95,12 @@ const TaskList = ({ tasks, setTasks }) => {
       <div className="my-2 flex flex-col">
         <div className="flex w-full justify-between">
           <div className="font-bold text-lg text-gray-500 flex-5 flex items-center">
+            <div
+              onClick={handleSelectAll}
+              className="h-5 w-5 my-2 border rounded-md cursor-pointer flex items-center justify-center mr-5"
+            >
+              {selectAll ? <LuCheck /> : ""}
+            </div>
             Task
             <div className={`mx-5 ${!checkSelected() && "hidden"}`}>
               <LuTrash2
@@ -100,7 +120,21 @@ const TaskList = ({ tasks, setTasks }) => {
             Status
           </div>
         </div>
-        {rows}
+        {tasks.map((task) => (
+          <Task
+            key={task.id}
+            id={task.id}
+            date={task.date}
+            priority={task.priority}
+            status={task.status}
+            title={task.title}
+            selected={task.selected}
+            onTitleChange={handleTitleChange}
+            onDateChange={handleDateChange}
+            onTaskSelect={handleTaskSelect}
+            onPriorityChange={handlePriorityChange}
+          />
+        ))}
       </div>
     </>
   );
