@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import { LuCalendar, LuCheck } from "react-icons/lu";
+import Dropdown from "./Dropdown";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const Task = ({
   date,
@@ -12,6 +14,7 @@ const Task = ({
   selected,
   onTaskSelect,
   onPriorityChange,
+  onStatusChange,
 }) => {
   const monthOptions = [
     { name: "January", short: "Jan" },
@@ -30,7 +33,23 @@ const Task = ({
 
   const inputRef = useRef();
 
+  const priorityRef = useRef();
+
+  const dropdownRef = useRef();
+
+  const statusRef = useRef();
+
+  const statusDropdownRef = useRef();
+
   const [visible, setVisible] = useState(false);
+
+  const [statusVisible, setStatusVisible] = useState(false);
+
+  // Function to close dropdown on clicking outside
+  useOutsideClick([priorityRef, dropdownRef], () => setVisible(false));
+  useOutsideClick([statusRef, statusDropdownRef], () =>
+    setStatusVisible(false)
+  );
 
   // Function to show date picker on clicking on date
   const showPicker = () => {
@@ -67,8 +86,18 @@ const Task = ({
         onClick={showPicker}
         className="text-gray-500 font-bold flex-1 flex items-center justify-center cursor-pointer relative"
       >
-        <LuCalendar className="text-lg" />
-        <p className="pl-4">{formattedDate}</p>
+        <LuCalendar
+          className={`text-lg ${
+            date.getDate() < new Date().getDate() && "text-red-600"
+          }`}
+        />
+        <p
+          className={`pl-4 ${
+            date.getDate() < new Date().getDate() && "text-red-600"
+          }`}
+        >
+          {formattedDate}
+        </p>
         <input
           ref={inputRef}
           id={id}
@@ -81,6 +110,7 @@ const Task = ({
       <div className={`flex-1 flex items-center justify-center relative`}>
         <p
           onClick={() => setVisible(!visible)}
+          ref={priorityRef}
           className={`${
             priority === "low"
               ? "bg-green-300 text-green-800"
@@ -91,31 +121,31 @@ const Task = ({
         >
           {priority}
         </p>
-        <div className={`absolute z-50 top-full ${visible ? "" : "hidden"}`}>
-          <ul className="list-none bg-gray-100 border rounded-md overflow-hidden shadow-lg">
-            <li
-              onClick={() => onPriorityChange(id, "low")}
-              className="px-7 cursor-pointer text-green-800 hover:bg-green-300 py-1"
-            >
-              low
-            </li>
-            <li
-              onClick={() => onPriorityChange(id, "mid")}
-              className="px-7 cursor-pointer text-amber-800 hover:bg-amber-300 py-1"
-            >
-              mid
-            </li>
-            <li
-              onClick={() => onPriorityChange(id, "high")}
-              className="px-7 cursor-pointer text-red-800 hover:bg-red-300 py-1"
-            >
-              high
-            </li>
-          </ul>
-        </div>
+        <Dropdown ref={dropdownRef} visible={visible}>
+          <li
+            onClick={() => onPriorityChange(id, "low")}
+            className="px-7 cursor-pointer text-green-800 hover:bg-green-300 py-1"
+          >
+            low
+          </li>
+          <li
+            onClick={() => onPriorityChange(id, "mid")}
+            className="px-7 cursor-pointer text-amber-800 hover:bg-amber-300 py-1"
+          >
+            mid
+          </li>
+          <li
+            onClick={() => onPriorityChange(id, "high")}
+            className="px-7 cursor-pointer text-red-800 hover:bg-red-300 py-1"
+          >
+            high
+          </li>
+        </Dropdown>
       </div>
-      <div className="text-gray-700 flex-1 flex items-center justify-center">
+      <div className="text-gray-700 flex-1 flex items-center justify-center relative">
         <p
+          onClick={() => setStatusVisible(!statusVisible)}
+          ref={statusRef}
           className={`${
             status === "todo"
               ? "bg-gray-300 text-gray-800"
@@ -126,6 +156,26 @@ const Task = ({
         >
           {status}
         </p>
+        <Dropdown ref={statusDropdownRef} visible={statusVisible}>
+          <li
+            onClick={() => onStatusChange(id, "done")}
+            className="px-7 cursor-pointer text-green-800 hover:bg-green-300 py-1"
+          >
+            done
+          </li>
+          <li
+            onClick={() => onStatusChange(id, "todo")}
+            className="px-7 cursor-pointer text-gray-800 hover:bg-gray-300 py-1"
+          >
+            todo
+          </li>
+          <li
+            onClick={() => onStatusChange(id, "in-progress")}
+            className="px-7 cursor-pointer text-amber-800 hover:bg-amber-300 py-1"
+          >
+            in-progress
+          </li>
+        </Dropdown>
       </div>
     </div>
   );

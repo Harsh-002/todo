@@ -68,10 +68,20 @@ const TaskList = ({ tasks, setTasks }) => {
     }
   }, [tasks]);
 
-  // handle Priority change
+  // Function to change priority
   const handlePriorityChange = (id, value) => {
     const updatedTasks = tasks.map((task) =>
       task.id === id ? { ...task, priority: value } : task
+    );
+
+    setTasks(updatedTasks);
+    saveToLocalStorage(updatedTasks);
+  };
+
+  // Function to change status
+  const handleStatusChange = (id, value) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, status: value } : task
     );
 
     setTasks(updatedTasks);
@@ -133,6 +143,7 @@ const TaskList = ({ tasks, setTasks }) => {
             onDateChange={handleDateChange}
             onTaskSelect={handleTaskSelect}
             onPriorityChange={handlePriorityChange}
+            onStatusChange={handleStatusChange}
           />
         ))}
       </div>
