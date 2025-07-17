@@ -13,7 +13,7 @@ const generateRandomId = () => {
 };
 
 // Main task view container
-const TaskViewMain = () => {
+const TaskViewMain = ({ searchValue }) => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -51,6 +51,17 @@ const TaskViewMain = () => {
     saveToLocalStorage(updatedTasks);
   };
 
+  // Function to filter tasks based on search Value
+  const filteredTasks = tasks.filter((task) => {
+    let title = task.title;
+
+    const words = title.split(" ");
+
+    title = words.join("");
+
+    return title.toLowerCase().includes(searchValue.toLowerCase());
+  });
+
   return (
     <div className="mt-5 mx-10 bg-gray-100 px-8 py-4 rounded-xl h-full">
       <div className="flex items-center w-full relative">
@@ -65,7 +76,7 @@ const TaskViewMain = () => {
           <LuPlus />
         </div>
       </div>
-      <TaskList tasks={tasks} setTasks={setTasks} />
+      <TaskList tasks={filteredTasks} setTasks={setTasks} />
     </div>
   );
 };

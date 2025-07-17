@@ -4,7 +4,7 @@ import SearchFilter from "./SearchFilter";
 import ToggleButton from "./ToggleButton";
 import Lottie from "lottie-react";
 
-const MenuBar = () => {
+const MenuBar = ({ searchValue, setSearchValue }) => {
   const [animation, setAnimation] = useState(null);
 
   return (
@@ -19,7 +19,7 @@ const MenuBar = () => {
           <ToggleButton />
         </div>
       </div>
-      <SearchFilter />
+      <SearchFilter searchValue={searchValue} setSearchValue={setSearchValue} />
     </div>
   );
 };

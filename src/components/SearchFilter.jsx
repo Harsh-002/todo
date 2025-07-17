@@ -1,8 +1,4 @@
-import { useState } from "react";
-
-const SearchFilter = () => {
-  const [searchValue, setSearchValue] = useState("");
-
+const SearchFilter = ({ searchValue, setSearchValue }) => {
   return (
     <div className="w-1/2 h-12 z-20">
       <input
