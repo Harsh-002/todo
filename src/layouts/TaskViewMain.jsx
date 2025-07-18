@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TaskList from "../components/TaskList";
 import { LuPlus } from "react-icons/lu";
 import { LuArrowDownUp } from "react-icons/lu";
@@ -6,6 +6,7 @@ import {
   getFromLocalStorage,
   saveToLocalStorage,
 } from "../services/localStorage";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 // Generate random ID for each task
 const generateRandomId = () => {
@@ -15,6 +16,8 @@ const generateRandomId = () => {
 // Main task view container
 const TaskViewMain = ({ searchValue }) => {
   const [tasks, setTasks] = useState([]);
+
+  const { darkMode } = useContext(DarkModeContext);
 
   useEffect(() => {
     // Get saved tasks from local storage
@@ -63,9 +66,17 @@ const TaskViewMain = ({ searchValue }) => {
   });
 
   return (
-    <div className="mt-5 mx-2 md:mx-10 bg-gray-100 md:px-8 px-2 py-4 rounded-xl h-full">
+    <div
+      className={`mt-5 mx-2 md:mx-10 bg-gray-100 md:px-8 px-2 py-4 rounded-xl h-full ${
+        darkMode && "bg-gray-700"
+      }`}
+    >
       <div className="flex items-center w-full relative">
-        <h1 className="md:text-3xl text-lg font-bold text-gray-800">
+        <h1
+          className={`md:text-3xl text-lg font-bold ${
+            darkMode && "text-gray-200"
+          }`}
+        >
           My Tasks
         </h1>
         <div className="absolute right-10 text-sky-500 p-2 rounded-sm bg-gray-300 cursor-pointer hover:shadow">

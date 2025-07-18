@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { LuCalendar, LuCheck } from "react-icons/lu";
 import Dropdown from "./Dropdown";
 import { useOutsideClick } from "../hooks/useOutsideClick";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 const Task = ({
   date,
@@ -31,6 +32,8 @@ const Task = ({
     { name: "November", short: "Nov" },
     { name: "December", short: "Dec" },
   ];
+
+  const { darkMode } = useContext(DarkModeContext);
 
   const inputRef = useRef();
 
@@ -70,8 +73,12 @@ const Task = ({
     monthOptions[date.getMonth()].short + " " + date.getDate();
 
   return (
-    <div className="flex w-full justify-between py-2 border-b border-b-gray-300">
-      <div className="flex items-center text-gray-700 lg:flex-5 flex-2">
+    <div
+      className={`flex w-full justify-between py-2 border-b border-b-gray-300 ${
+        darkMode ? "text-gray-200" : "text-gray-800"
+      }`}
+    >
+      <div className="flex items-center  lg:flex-5 flex-2">
         <div
           onMouseDown={(e) => handleMouseDown(e)}
           onClick={(e) => onTaskSelect(id, index, e)}
@@ -86,21 +93,31 @@ const Task = ({
           value={title}
           onChange={(e) => onTitleChange(id, e.target.value)}
           placeholder="Click to add a task"
-          className="px-2 md:ml-4 w-full text-wrap wrap-break-word outline-none text-md md:text-lg sm:text-md text-sm sm:text-md"
+          className={`px-2 md:ml-4 w-full text-wrap wrap-break-word outline-none text-md md:text-lg sm:text-md text-sm sm:text-md ${
+            darkMode ? "placeholder:text-gray-400" : "placeholder:text-gray-500"
+          }`}
         />
       </div>
       <div
         onClick={showPicker}
-        className="text-gray-500 font-bold flex-1 flex items-center justify-center cursor-pointer relative"
+        className="text-gray-500 font-bold flex-1 flex justify-center items-center cursor-pointer relative"
       >
         <LuCalendar
-          className={`text-lg text-md md:text-lg sm:text-md ${
-            date.getDate() < new Date().getDate() && "text-red-600"
+          className={`text-lg text-md md:text-lg sm:text-md absolute md:left-4 left-0 ${
+            date.getDate() < new Date().getDate()
+              ? "text-red-400"
+              : darkMode
+              ? "text-gray-300"
+              : "text-gray-600"
           }`}
         />
         <p
           className={`md:pl-4 pl-1 text-md md:text-lg sm:text-md text-sm ${
-            date.getDate() < new Date().getDate() && "text-red-600"
+            date.getDate() < new Date().getDate()
+              ? "text-red-400"
+              : darkMode
+              ? "text-gray-300"
+              : "text-gray-600"
           }`}
         >
           {formattedDate}
@@ -120,65 +137,101 @@ const Task = ({
           ref={priorityRef}
           className={`${
             priority === "low"
-              ? "bg-green-300 text-green-800"
+              ? darkMode
+                ? "bg-green-800 text-green-300"
+                : "bg-green-300 text-green-800"
               : priority === "mid"
-              ? "bg-amber-300 text-amber-800"
+              ? darkMode
+                ? "bg-amber-800 text-amber-300"
+                : "bg-amber-300 text-amber-800"
+              : darkMode
+              ? "bg-red-800 text-red-300"
               : "bg-red-300 text-red-800"
-          } md:px-4 px-2 py-1 rounded-md cursor-pointer text-md md:text-lg sm:text-md text-sm`}
+          } md:px-4 px-2 py-1 mx-2 w-full text-center rounded-md cursor-pointer text-md md:text-lg sm:text-md text-sm`}
         >
           {priority}
         </p>
         <Dropdown ref={dropdownRef} visible={visible}>
           <li
             onClick={() => onPriorityChange(id, "low")}
-            className="px-7 cursor-pointer text-green-800 hover:bg-green-300 py-1"
+            className={`px-7 cursor-pointer py-1 ${
+              darkMode
+                ? "text-green-300 hover:bg-green-800"
+                : "text-green-800 hover:bg-green-300"
+            }`}
           >
             low
           </li>
           <li
             onClick={() => onPriorityChange(id, "mid")}
-            className="px-7 cursor-pointer text-amber-800 hover:bg-amber-300 py-1"
+            className={`px-7 cursor-pointer py-1 ${
+              darkMode
+                ? "text-amber-300 hover:bg-amber-800"
+                : "text-amber-800 hover:bg-amber-300"
+            }`}
           >
             mid
           </li>
           <li
             onClick={() => onPriorityChange(id, "high")}
-            className="px-7 cursor-pointer text-red-800 hover:bg-red-300 py-1"
+            className={`px-7 cursor-pointer py-1 ${
+              darkMode
+                ? "text-red-300 hover:bg-red-800"
+                : "text-red-800 hover:bg-red-300"
+            }`}
           >
             high
           </li>
         </Dropdown>
       </div>
-      <div className="text-gray-700 flex-1 flex items-center justify-center relative">
+      <div className=" flex-1 flex items-center justify-center relative">
         <p
           onClick={() => setStatusVisible(!statusVisible)}
           ref={statusRef}
           className={`${
             status === "todo"
-              ? "bg-gray-300 text-gray-800"
+              ? darkMode
+                ? "bg-gray-800 text-gray-300"
+                : "bg-gray-300 text-gray-800"
               : status === "done"
-              ? "bg-green-300 text-green-800"
+              ? darkMode
+                ? "bg-green-800 text-green-300"
+                : "bg-green-300 text-green-800"
+              : darkMode
+              ? "bg-yellow-800 text-yellow-300"
               : "bg-yellow-300 text-yellow-800"
-          } md:px-4 px-2 py-1 rounded-md  cursor-pointer text-md md:text-lg sm:text-md text-sm`}
+          } md:px-4 w-full mx-2 text-center px-2 py-1 rounded-md  cursor-pointer text-md md:text-lg sm:text-md text-sm`}
         >
           {status}
         </p>
         <Dropdown ref={statusDropdownRef} visible={statusVisible}>
           <li
             onClick={() => onStatusChange(id, "done")}
-            className="px-7 cursor-pointer text-green-800 hover:bg-green-300 py-1"
+            className={`px-7 cursor-pointer py-1 ${
+              darkMode
+                ? "text-green-300 hover:bg-green-800"
+                : "text-green-800 hover:bg-green-300"
+            }`}
           >
             done
           </li>
           <li
             onClick={() => onStatusChange(id, "todo")}
-            className="px-7 cursor-pointer text-gray-800 hover:bg-gray-300 py-1"
+            className={`px-7 cursor-pointer py-1 ${
+              darkMode
+                ? "text-gray-300 hover:bg-gray-800"
+                : "text-gray-800 hover:bg-gray-300"
+            }`}
           >
             todo
           </li>
           <li
             onClick={() => onStatusChange(id, "in-progress")}
-            className="px-7 cursor-pointer text-amber-800 hover:bg-amber-300 py-1"
+            className={`px-7 cursor-pointer py-1 ${
+              darkMode
+                ? "text-amber-300 hover:bg-amber-800"
+                : "text-amber-800 hover:bg-amber-300"
+            }`}
           >
             in-progress
           </li>

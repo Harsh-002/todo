@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dinosaur from "../assets/lotties/dinosaur.json";
 import sloth from "../assets/lotties/sloth.json";
 import camel from "../assets/lotties/camel.json";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 const Greet = ({ setAnimation }) => {
   const [hours, setHours] = useState(new Date().getHours());
   const [greet, setGreet] = useState("");
+
+  const { darkMode } = useContext(DarkModeContext);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,7 +32,11 @@ const Greet = ({ setAnimation }) => {
   }, [hours, setAnimation]);
 
   return (
-    <div className="text-center md:text-2xl md:m-4 m-2 font-bold flex items-center justify-center">
+    <div
+      className={`text-center md:text-2xl md:m-4 m-2 font-bold flex items-center justify-center ${
+        darkMode && "text-gray-300"
+      }`}
+    >
       {greet}
     </div>
   );

@@ -3,11 +3,14 @@ import Lottie from "lottie-react";
 import empty from "../assets/lotties/empty.json";
 import { saveToLocalStorage } from "../services/localStorage";
 import { LuCheck, LuTrash2 } from "react-icons/lu";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 const TaskList = ({ tasks, setTasks }) => {
   const [selectAll, setSelectAll] = useState(false);
   const [lastSelectedIndex, setLastSelectedIndex] = useState(null);
+
+  const { darkMode } = useContext(DarkModeContext);
 
   // Function to change title of task and saving it to local storage on every key stroke
   const handleTitleChange = (id, newTitle) => {
@@ -120,8 +123,12 @@ const TaskList = ({ tasks, setTasks }) => {
   return (
     <>
       <div className="my-2 flex flex-col">
-        <div className="flex w-full justify-between">
-          <div className="font-bold md:text-lg sm:text-md text-sm text-gray-500 lg:flex-5 flex-2 flex items-center">
+        <div
+          className={`flex w-full justify-between ${
+            darkMode ? "text-gray-200" : "text-gray-800"
+          }`}
+        >
+          <div className="font-bold md:text-lg sm:text-md text-sm lg:flex-5 flex-2 flex items-center">
             <div
               onClick={handleSelectAll}
               className="md:h-5 md:w-5 w-4 h-4 my-2 border md:rounded-md rounded-sm cursor-pointer flex items-center justify-center md:mr-5 mr-2"
@@ -137,13 +144,13 @@ const TaskList = ({ tasks, setTasks }) => {
             </div>
           </div>
 
-          <div className="font-bold md:text-lg sm:text-md text-sm text-gray-500 flex-1 text-center">
+          <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
             Due Date
           </div>
-          <div className="font-bold md:text-lg sm:text-md text-sm text-gray-500 flex-1 text-center">
+          <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
             Priority
           </div>
-          <div className="font-bold md:text-lg sm:text-md text-sm text-gray-500 flex-1 text-center">
+          <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
             Status
           </div>
         </div>
