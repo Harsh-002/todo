@@ -9,7 +9,7 @@ import {
 
 // Generate random ID for each task
 const generateRandomId = () => {
-  return Math.round(Math.random() * 1000) + 1;
+  return Math.round(Math.random() * 100000) + 1;
 };
 
 // Main task view container
@@ -63,9 +63,11 @@ const TaskViewMain = ({ searchValue }) => {
   });
 
   return (
-    <div className="mt-5 mx-10 bg-gray-100 px-8 py-4 rounded-xl h-full">
+    <div className="mt-5 mx-2 md:mx-10 bg-gray-100 md:px-8 px-2 py-4 rounded-xl h-full">
       <div className="flex items-center w-full relative">
-        <h1 className="text-3xl font-bold text-gray-800">My Tasks</h1>
+        <h1 className="md:text-3xl text-lg font-bold text-gray-800">
+          My Tasks
+        </h1>
         <div className="absolute right-10 text-sky-500 p-2 rounded-sm bg-gray-300 cursor-pointer hover:shadow">
           <LuArrowDownUp />
         </div>

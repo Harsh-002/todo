@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 const TaskList = ({ tasks, setTasks }) => {
   const [selectAll, setSelectAll] = useState(false);
+  const [lastSelectedIndex, setLastSelectedIndex] = useState(null);
 
   // Function to change title of task and saving it to local storage on every key stroke
   const handleTitleChange = (id, newTitle) => {
@@ -27,12 +28,28 @@ const TaskList = ({ tasks, setTasks }) => {
   };
 
   // Function to select and unselect task
-  const handleTaskSelect = (id) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === id ? { ...task, selected: !task.selected } : task
-    );
-    setTasks(updatedTasks);
-    saveToLocalStorage(updatedTasks);
+  const handleTaskSelect = (id, index, event) => {
+    // If shift key is pressed select whole range
+    if (event.nativeEvent.shiftKey && lastSelectedIndex !== null) {
+      const [start, end] = [lastSelectedIndex, index].sort((a, b) => a - b);
+
+      const isSelected = !tasks[index].selected;
+
+      const updatedTasks = tasks.map((task, i) =>
+        i >= start && i <= end ? { ...task, selected: isSelected } : task
+      );
+
+      setTasks(updatedTasks);
+      setLastSelectedIndex(index);
+      saveToLocalStorage(updatedTasks);
+    } else {
+      const updatedTasks = tasks.map((task) =>
+        task.id === id ? { ...task, selected: !task.selected } : task
+      );
+      setTasks(updatedTasks);
+      setLastSelectedIndex(index);
+      saveToLocalStorage(updatedTasks);
+    }
   };
 
   // Function to select and unselect all tasks
@@ -104,10 +121,10 @@ const TaskList = ({ tasks, setTasks }) => {
     <>
       <div className="my-2 flex flex-col">
         <div className="flex w-full justify-between">
-          <div className="font-bold text-lg text-gray-500 flex-5 flex items-center">
+          <div className="font-bold md:text-lg sm:text-md text-sm text-gray-500 lg:flex-5 flex-2 flex items-center">
             <div
               onClick={handleSelectAll}
-              className="h-5 w-5 my-2 border rounded-md cursor-pointer flex items-center justify-center mr-5"
+              className="md:h-5 md:w-5 w-4 h-4 my-2 border md:rounded-md rounded-sm cursor-pointer flex items-center justify-center md:mr-5 mr-2"
             >
               {selectAll ? <LuCheck /> : ""}
             </div>
@@ -120,20 +137,21 @@ const TaskList = ({ tasks, setTasks }) => {
             </div>
           </div>
 
-          <div className="font-bold text-lg text-gray-500 flex-1 text-center">
+          <div className="font-bold md:text-lg sm:text-md text-sm text-gray-500 flex-1 text-center">
             Due Date
           </div>
-          <div className="font-bold text-lg text-gray-500 flex-1 text-center">
+          <div className="font-bold md:text-lg sm:text-md text-sm text-gray-500 flex-1 text-center">
             Priority
           </div>
-          <div className="font-bold text-lg text-gray-500 flex-1 text-center">
+          <div className="font-bold md:text-lg sm:text-md text-sm text-gray-500 flex-1 text-center">
             Status
           </div>
         </div>
-        {tasks.map((task) => (
+        {tasks.map((task, index) => (
           <Task
             key={task.id}
             id={task.id}
+            index={index}
             date={task.date}
             priority={task.priority}
             status={task.status}

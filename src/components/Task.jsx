@@ -9,6 +9,7 @@ const Task = ({
   status,
   title,
   id,
+  index,
   onTitleChange,
   onDateChange,
   selected,
@@ -51,6 +52,11 @@ const Task = ({
     setStatusVisible(false)
   );
 
+  // Function to prevent text selection while selecting tasks;
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+  };
+
   // Function to show date picker on clicking on date
   const showPicker = () => {
     if (inputRef.current?.showPicker) {
@@ -65,10 +71,11 @@ const Task = ({
 
   return (
     <div className="flex w-full justify-between py-2 border-b border-b-gray-300">
-      <div className="flex text-gray-700 flex-5">
+      <div className="flex items-center text-gray-700 lg:flex-5 flex-2">
         <div
-          onClick={() => onTaskSelect(id)}
-          className="h-5 w-5 my-2 border rounded-md cursor-pointer flex items-center justify-center"
+          onMouseDown={(e) => handleMouseDown(e)}
+          onClick={(e) => onTaskSelect(id, index, e)}
+          className="md:h-5 md:w-5 w-4 h-4 border md:rounded-md rounded-sm cursor-pointer flex items-center justify-center"
         >
           {selected ? <LuCheck /> : ""}
         </div>
@@ -79,7 +86,7 @@ const Task = ({
           value={title}
           onChange={(e) => onTitleChange(id, e.target.value)}
           placeholder="Click to add a task"
-          className="px-1 ml-4 w-full outline-none"
+          className="px-2 md:ml-4 w-full text-wrap wrap-break-word outline-none text-md md:text-lg sm:text-md text-sm sm:text-md"
         />
       </div>
       <div
@@ -87,12 +94,12 @@ const Task = ({
         className="text-gray-500 font-bold flex-1 flex items-center justify-center cursor-pointer relative"
       >
         <LuCalendar
-          className={`text-lg ${
+          className={`text-lg text-md md:text-lg sm:text-md ${
             date.getDate() < new Date().getDate() && "text-red-600"
           }`}
         />
         <p
-          className={`pl-4 ${
+          className={`md:pl-4 pl-1 text-md md:text-lg sm:text-md text-sm ${
             date.getDate() < new Date().getDate() && "text-red-600"
           }`}
         >
@@ -117,7 +124,7 @@ const Task = ({
               : priority === "mid"
               ? "bg-amber-300 text-amber-800"
               : "bg-red-300 text-red-800"
-          } px-4 py-1 rounded-md cursor-pointer`}
+          } md:px-4 px-2 py-1 rounded-md cursor-pointer text-md md:text-lg sm:text-md text-sm`}
         >
           {priority}
         </p>
@@ -152,7 +159,7 @@ const Task = ({
               : status === "done"
               ? "bg-green-300 text-green-800"
               : "bg-yellow-300 text-yellow-800"
-          } px-4 py-1 rounded-md  cursor-pointer`}
+          } md:px-4 px-2 py-1 rounded-md  cursor-pointer text-md md:text-lg sm:text-md text-sm`}
         >
           {status}
         </p>

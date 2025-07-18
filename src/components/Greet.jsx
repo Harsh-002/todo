@@ -29,7 +29,7 @@ const Greet = ({ setAnimation }) => {
   }, [hours, setAnimation]);
 
   return (
-    <div className="text-center text-2xl m-4 font-bold flex items-center justify-center">
+    <div className="text-center md:text-2xl md:m-4 m-2 font-bold flex items-center justify-center">
       {greet}
     </div>
   );

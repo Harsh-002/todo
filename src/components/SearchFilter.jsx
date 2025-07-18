@@ -1,8 +1,8 @@
 const SearchFilter = ({ searchValue, setSearchValue }) => {
   return (
-    <div className="w-1/2 h-12 z-20">
+    <div className="w-1/2 md:h-12 h-8 z-20">
       <input
-        className="rounded-xl w-full h-full p-3 bg-gray-100 shadow outline-none"
+        className="rounded-xl w-full h-full p-3 bg-gray-100 shadow outline-none placeholder:text-sm md:placeholder:text-lg"
         type="text"
         id="search"
         name="search"
