@@ -7,15 +7,15 @@ import { saveDarkMode } from "../services/localStorage";
 const ToggleButton = () => {
   const { darkMode, setDarkMode } = useContext(DarkModeContext);
 
-  const handleToggleDarkMode = (e) => {
-    e.preventDefault();
+  const handleToggleDarkMode = () => {
     setDarkMode(!darkMode);
     saveDarkMode(!darkMode);
   };
 
   return (
     <div
-      onClick={(e) => handleToggleDarkMode(e)}
+      onClick={handleToggleDarkMode}
+      onMouseDown={(e) => e.preventDefault()}
       className={`w-14 h-7 border-2 border-white shadow-gray-400 shadow rounded-4xl flex items-center p-0.5 cursor-pointer relative transition-colors ${
         darkMode ? "bg-gray-800" : "bg-amber-500"
       }`}

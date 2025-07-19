@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 
-const Dropdown = ({ children, ref, visible }) => {
+const Dropdown = ({ ref, visible, onChange, values, id }) => {
   const { darkMode } = useContext(DarkModeContext);
   return (
     <div
@@ -13,7 +13,19 @@ const Dropdown = ({ children, ref, visible }) => {
           darkMode ? "bg-gray-500" : "bg-gray-100"
         }`}
       >
-        {children}
+        {values.map((value) => (
+          <li
+            key={`${value.name}-${id}`}
+            onClick={() => onChange(id, value.name)}
+            className={`px-7 cursor-pointer py-1 ${
+              darkMode
+                ? `text-${value.textColor} hover:bg-${value.bgColor}`
+                : `text-${value.bgColor} hover:bg-${value.textColor}`
+            }`}
+          >
+            {value.name}
+          </li>
+        ))}
       </ul>
     </div>
   );

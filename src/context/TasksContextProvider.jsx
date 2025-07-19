@@ -22,8 +22,6 @@ const TasksContextProvider = ({ children }) => {
     }
   }, []);
 
-  console.log(tasks);
-
   return (
     <TasksContext.Provider value={{ tasks, setTasks }}>
       {children}

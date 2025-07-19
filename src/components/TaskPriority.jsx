@@ -10,6 +10,24 @@ export const TaskPriority = ({ priority, darkMode, onPriorityChange, id }) => {
 
   useOutsideClick([priorityRef, dropdownRef], () => setVisible(false));
 
+  const values = [
+    {
+      name: "low",
+      textColor: "green-300",
+      bgColor: "green-800",
+    },
+    {
+      name: "mid",
+      textColor: "amber-300",
+      bgColor: "amber-800",
+    },
+    {
+      name: "high",
+      textColor: "red-300",
+      bgColor: "red-800",
+    },
+  ];
+
   return (
     <div className={`flex-1 flex items-center justify-center relative`}>
       <p
@@ -31,38 +49,13 @@ export const TaskPriority = ({ priority, darkMode, onPriorityChange, id }) => {
       >
         {priority}
       </p>
-      <Dropdown ref={dropdownRef} visible={visible}>
-        <li
-          onClick={() => onPriorityChange(id, "low")}
-          className={`px-7 cursor-pointer py-1 ${
-            darkMode
-              ? "text-green-300 hover:bg-green-800"
-              : "text-green-800 hover:bg-green-300"
-          }`}
-        >
-          low
-        </li>
-        <li
-          onClick={() => onPriorityChange(id, "mid")}
-          className={`px-7 cursor-pointer py-1 ${
-            darkMode
-              ? "text-amber-300 hover:bg-amber-800"
-              : "text-amber-800 hover:bg-amber-300"
-          }`}
-        >
-          mid
-        </li>
-        <li
-          onClick={() => onPriorityChange(id, "high")}
-          className={`px-7 cursor-pointer py-1 ${
-            darkMode
-              ? "text-red-300 hover:bg-red-800"
-              : "text-red-800 hover:bg-red-300"
-          }`}
-        >
-          high
-        </li>
-      </Dropdown>
+      <Dropdown
+        ref={dropdownRef}
+        visible={visible}
+        values={values}
+        id={id}
+        onChange={onPriorityChange}
+      />
     </div>
   );
 };

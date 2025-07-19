@@ -1,3 +1,5 @@
+import { LuCheck } from "react-icons/lu";
+
 const TaskTitle = ({
   onTaskSelect,
   selected,

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Dropdown from "./Dropdown";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 
@@ -13,6 +13,24 @@ const TaskStatus = ({ darkMode, onStatusChange, id, status }) => {
   useOutsideClick([statusRef, statusDropdownRef], () =>
     setStatusVisible(false)
   );
+
+  const values = [
+    {
+      name: "done",
+      textColor: "green-300",
+      bgColor: "green-800",
+    },
+    {
+      name: "todo",
+      textColor: "gray-300",
+      bgColor: "gray-800",
+    },
+    {
+      name: "in-progess",
+      textColor: "amber-300",
+      bgColor: "amber-800",
+    },
+  ];
 
   return (
     <div className=" flex-1 flex items-center justify-center relative">
@@ -35,38 +53,13 @@ const TaskStatus = ({ darkMode, onStatusChange, id, status }) => {
       >
         {status}
       </p>
-      <Dropdown ref={statusDropdownRef} visible={statusVisible}>
-        <li
-          onClick={() => onStatusChange(id, "done")}
-          className={`px-7 cursor-pointer py-1 ${
-            darkMode
-              ? "text-green-300 hover:bg-green-800"
-              : "text-green-800 hover:bg-green-300"
-          }`}
-        >
-          done
-        </li>
-        <li
-          onClick={() => onStatusChange(id, "todo")}
-          className={`px-7 cursor-pointer py-1 ${
-            darkMode
-              ? "text-gray-300 hover:bg-gray-800"
-              : "text-gray-800 hover:bg-gray-300"
-          }`}
-        >
-          todo
-        </li>
-        <li
-          onClick={() => onStatusChange(id, "in-progress")}
-          className={`px-7 cursor-pointer py-1 ${
-            darkMode
-              ? "text-amber-300 hover:bg-amber-800"
-              : "text-amber-800 hover:bg-amber-300"
-          }`}
-        >
-          in-progress
-        </li>
-      </Dropdown>
+      <Dropdown
+        ref={statusDropdownRef}
+        visible={statusVisible}
+        onChange={onStatusChange}
+        values={values}
+        id={id}
+      />
     </div>
   );
 };
