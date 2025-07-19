@@ -29,9 +29,11 @@ export const TaskPriority = ({ priority, darkMode, onPriorityChange, id }) => {
   ];
 
   return (
-    <div className={`flex-1 flex items-center justify-center relative`}>
+    <div
+      onClick={() => setVisible(!visible)}
+      className={`flex-1 flex items-center justify-center relative`}
+    >
       <p
-        onClick={() => setVisible(!visible)}
         ref={priorityRef}
         className={`${
           priority === "low"

@@ -33,9 +33,11 @@ const TaskStatus = ({ darkMode, onStatusChange, id, status }) => {
   ];
 
   return (
-    <div className=" flex-1 flex items-center justify-center relative">
+    <div
+      onClick={() => setStatusVisible(!statusVisible)}
+      className=" flex-1 flex items-center justify-center relative"
+    >
       <p
-        onClick={() => setStatusVisible(!statusVisible)}
         ref={statusRef}
         className={`${
           status === "todo"
