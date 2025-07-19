@@ -1,0 +1,68 @@
+import React, { useRef, useState } from "react";
+import Dropdown from "./Dropdown";
+import { useOutsideClick } from "../hooks/useOutsideClick";
+
+export const TaskPriority = ({ priority, darkMode, onPriorityChange, id }) => {
+  const [visible, setVisible] = useState(false);
+
+  const priorityRef = useRef();
+  const dropdownRef = useRef();
+
+  useOutsideClick([priorityRef, dropdownRef], () => setVisible(false));
+
+  return (
+    <div className={`flex-1 flex items-center justify-center relative`}>
+      <p
+        onClick={() => setVisible(!visible)}
+        ref={priorityRef}
+        className={`${
+          priority === "low"
+            ? darkMode
+              ? "bg-green-800 text-green-300"
+              : "bg-green-300 text-green-800"
+            : priority === "mid"
+            ? darkMode
+              ? "bg-amber-800 text-amber-300"
+              : "bg-amber-300 text-amber-800"
+            : darkMode
+            ? "bg-red-800 text-red-300"
+            : "bg-red-300 text-red-800"
+        } md:px-4 px-2 py-1 mx-2 w-full text-center rounded-md cursor-pointer text-md md:text-lg sm:text-md text-sm`}
+      >
+        {priority}
+      </p>
+      <Dropdown ref={dropdownRef} visible={visible}>
+        <li
+          onClick={() => onPriorityChange(id, "low")}
+          className={`px-7 cursor-pointer py-1 ${
+            darkMode
+              ? "text-green-300 hover:bg-green-800"
+              : "text-green-800 hover:bg-green-300"
+          }`}
+        >
+          low
+        </li>
+        <li
+          onClick={() => onPriorityChange(id, "mid")}
+          className={`px-7 cursor-pointer py-1 ${
+            darkMode
+              ? "text-amber-300 hover:bg-amber-800"
+              : "text-amber-800 hover:bg-amber-300"
+          }`}
+        >
+          mid
+        </li>
+        <li
+          onClick={() => onPriorityChange(id, "high")}
+          className={`px-7 cursor-pointer py-1 ${
+            darkMode
+              ? "text-red-300 hover:bg-red-800"
+              : "text-red-800 hover:bg-red-300"
+          }`}
+        >
+          high
+        </li>
+      </Dropdown>
+    </div>
+  );
+};

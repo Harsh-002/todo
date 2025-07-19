@@ -1,12 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import TaskList from "../components/TaskList";
 import { LuPlus } from "react-icons/lu";
 import { LuArrowDownUp } from "react-icons/lu";
-import {
-  getFromLocalStorage,
-  saveToLocalStorage,
-} from "../services/localStorage";
+import { saveToLocalStorage } from "../services/localStorage";
 import { DarkModeContext } from "../context/DarkModeContext";
+import { TasksContext } from "../context/TasksContext";
 
 // Generate random ID for each task
 const generateRandomId = () => {
@@ -15,25 +13,9 @@ const generateRandomId = () => {
 
 // Main task view container
 const TaskViewMain = ({ searchValue }) => {
-  const [tasks, setTasks] = useState([]);
+  const { tasks, setTasks } = useContext(TasksContext);
 
   const { darkMode } = useContext(DarkModeContext);
-
-  useEffect(() => {
-    // Get saved tasks from local storage
-    const savedTasks = getFromLocalStorage("tasks");
-
-    // Change date format from string to Date() object for using Date.getMonth() and getDate() functions
-    if (savedTasks) {
-      const parsedTasks = savedTasks.map((task) => ({
-        ...task,
-        date: new Date(task.date),
-        selected: false,
-      }));
-      // Update tasks array
-      setTasks(parsedTasks);
-    }
-  }, []);
 
   // Function to add new task with default values
   const handleAddTask = () => {
@@ -89,7 +71,7 @@ const TaskViewMain = ({ searchValue }) => {
           <LuPlus />
         </div>
       </div>
-      <TaskList tasks={filteredTasks} setTasks={setTasks} />
+      <TaskList tasks={filteredTasks} />
     </div>
   );
 };
