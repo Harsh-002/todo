@@ -22,8 +22,8 @@ const Dropdown = ({ ref, visible, onChange, values, id }) => {
     <div
       ref={ref}
       onMouseLeave={handleMouseLeave}
-      className={`absolute z-50 top-full right-11/12 w-28 ${
-        visible ? "" : "hidden"
+      className={`absolute text-md text-left z-50 top-full right-0 w-auto min-w-32 ${
+        !visible && "hidden"
       }`}
     >
       <ul
@@ -31,23 +31,26 @@ const Dropdown = ({ ref, visible, onChange, values, id }) => {
           darkMode ? "bg-gray-500" : "bg-gray-100"
         }`}
       >
-        {values.map((value, idx) => (
-          <li
-            onMouseEnter={() => handleShowSubOptions(value)}
-            key={`${value.name}-${idx}`}
-            onClick={() => onChange(id, value.name)}
-            className={`relative px-2 cursor-pointer py-1 ${
-              darkMode
-                ? `text-${value.textColor} hover:bg-${value.bgColor}`
-                : `text-${value.bgColor} hover:bg-${value.textColor}`
-            }`}
-          >
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              {value.subOptions && <LuChevronLeft />}
-            </div>
-            {value.name}
-          </li>
-        ))}
+        {values.map((value, idx) => {
+          return (
+            <li
+              onMouseEnter={() => handleShowSubOptions(value)}
+              key={`${value.name}-${idx}`}
+              onClick={() => onChange(id, value.name)}
+              className={`relative px-2 cursor-pointer py-1 ${value.bgColor} ${
+                darkMode
+                  ? `hover:backdrop-brightness-120 ${value.darkText}`
+                  : `hover:backdrop-brightness-90 ${value.textColor}`
+              }
+            `}
+            >
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                {value.subOptions && <LuChevronLeft />}
+              </div>
+              {value.name}
+            </li>
+          );
+        })}
       </ul>
 
       {activeSubOptions && (
@@ -61,10 +64,12 @@ const Dropdown = ({ ref, visible, onChange, values, id }) => {
               <li
                 key={`sub-${opt.name}-${idx}`}
                 onClick={() => onChange(id, opt.name)}
-                className={`px-2 cursor-pointer py-1 ${
+                className={`px-2 cursor-pointer py-1 hover:backdrop-brightness-90 ${
+                  opt.textColor
+                } ${opt.bgColor} ${
                   darkMode
-                    ? `text-${opt.textColor} hover:bg-${opt.bgColor}`
-                    : `text-${opt.bgColor} hover:bg-${opt.textColor}`
+                    ? `hover:backdrop-brightness-120 ${opt.darkText}`
+                    : `hover:backdrop-brightness-90 ${opt.textColor}`
                 }`}
               >
                 {opt.name}
