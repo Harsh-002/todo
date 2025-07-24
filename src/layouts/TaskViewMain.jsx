@@ -54,35 +54,23 @@ const TaskViewMain = ({ searchValue }) => {
   const sortOptions = [
     {
       name: "priority",
-      textColor: "gray-300",
-      bgColor: "gray-800",
       subOptions: [
         {
           name: "low first",
-          textColor: "gray-300",
-          bgColor: "gray-800",
         },
         {
           name: "high first",
-          textColor: "gray-300",
-          bgColor: "gray-800",
         },
       ],
     },
     {
       name: "date",
-      textColor: "gray-300",
-      bgColor: "gray-800",
       subOptions: [
         {
           name: "closest first",
-          textColor: "gray-300",
-          bgColor: "gray-800",
         },
         {
           name: "farthest first",
-          textColor: "gray-300",
-          bgColor: "gray-800",
         },
       ],
     },
@@ -109,11 +97,12 @@ const TaskViewMain = ({ searchValue }) => {
     }
 
     setTasks(updatedTasks);
+    saveToLocalStorage(updatedTasks);
   };
 
   return (
     <div
-      className={`mt-5 mx-2 md:mx-10 bg-gray-100 md:px-8 px-2 py-4 rounded-xl h-full ${
+      className={`mt-5 mx-2 md:mx-10 bg-gray-100 px-2 py-4 rounded-xl h-full ${
         darkMode && "bg-gray-700"
       }`}
     >
@@ -127,7 +116,9 @@ const TaskViewMain = ({ searchValue }) => {
         </h1>
         <div
           onClick={() => setVisible(!visible)}
-          className="absolute flex items-center text-sm gap-2 right-18 text-sky-500 p-2 rounded-sm bg-gray-300 cursor-pointer hover:shadow"
+          className={`${
+            darkMode ? "text-gray-300 bg-gray-500" : "text-sky-500 bg-gray-300"
+          } absolute flex items-center text-sm gap-2 right-18 p-2 rounded-sm cursor-pointer hover:shadow`}
         >
           Sort by
           <LuArrowDownUp />

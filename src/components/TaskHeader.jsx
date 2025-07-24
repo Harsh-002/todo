@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { LuCheck, LuTrash2 } from "react-icons/lu";
 
@@ -12,7 +12,7 @@ const TaskHeader = ({
 
   return (
     <div
-      className={`flex w-full justify-between ${
+      className={`flex w-full justify-between px-4 ${
         darkMode ? "text-gray-200" : "text-gray-800"
       }`}
     >

@@ -14,12 +14,35 @@ import {
   updateTaskSelect,
   updateTitleChange,
 } from "../utils/taskHandlers";
+import {
+  closestCorners,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 
 const TaskList = ({ tasks }) => {
   const [selectAll, setSelectAll] = useState(false);
   const [lastSelectedIndex, setLastSelectedIndex] = useState(null);
+  const [activeId, setActiveId] = useState(null);
 
   const { setTasks } = useContext(TasksContext);
+
+  // Drag and drop for mobile
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200, // a delay to prevent accidental scrolls while dragging
+        tolerance: 5, // minimum move to activate drag
+      },
+    }),
+    useSensor(KeyboardSensor)
+  );
 
   // Function to update tasks state and in local storage
   const updateTasks = (updatedTasks) => {
@@ -107,8 +130,29 @@ const TaskList = ({ tasks }) => {
     );
   }
 
+  // Drag and drop logic starts here
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
+  const handleDragEnd = (event) => {
+    setActiveId(null);
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      const oldIndex = tasks.findIndex((t) => t.id === active.id);
+      const newIndex = tasks.findIndex((t) => t.id === over.id);
+      setTasks(arrayMove(tasks, oldIndex, newIndex));
+      saveToLocalStorage(arrayMove(tasks, oldIndex, newIndex));
+    }
+  };
+
   return (
-    <>
+    <DndContext
+      collisionDetection={closestCorners}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      sensors={sensors}
+    >
       <div className="my-2 flex flex-col">
         <TaskHeader
           handleSelectAll={handleSelectAll}
@@ -116,25 +160,28 @@ const TaskList = ({ tasks }) => {
           checkSelected={checkSelected}
           handleDeleteTasks={handleDeleteTasks}
         />
-        {tasks.map((task, index) => (
-          <Task
-            key={task.id}
-            id={task.id}
-            index={index}
-            date={task.date}
-            priority={task.priority}
-            status={task.status}
-            title={task.title}
-            selected={task.selected}
-            onTitleChange={handleTitleChange}
-            onDateChange={handleDateChange}
-            onTaskSelect={handleTaskSelect}
-            onPriorityChange={handlePriorityChange}
-            onStatusChange={handleStatusChange}
-          />
-        ))}
+        <SortableContext items={tasks.map((t) => t.id)}>
+          {tasks.map((task, index) => (
+            <Task
+              key={task.id}
+              id={task.id}
+              activeId={activeId}
+              index={index}
+              date={task.date}
+              priority={task.priority}
+              status={task.status}
+              title={task.title}
+              selected={task.selected}
+              onTitleChange={handleTitleChange}
+              onDateChange={handleDateChange}
+              onTaskSelect={handleTaskSelect}
+              onPriorityChange={handlePriorityChange}
+              onStatusChange={handleStatusChange}
+            />
+          ))}
+        </SortableContext>
       </div>
-    </>
+    </DndContext>
   );
 };
 

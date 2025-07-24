@@ -1,9 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import TaskTitle from "./TaskTitle";
 import DatePicker from "./DatePicker";
 import { TaskPriority } from "./TaskPriority";
 import TaskStatus from "./TaskStatus";
+import { LuGripVertical } from "react-icons/lu";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const Task = ({
   date,
@@ -11,6 +14,7 @@ const Task = ({
   status,
   title,
   id,
+  activeId,
   index,
   onTitleChange,
   onDateChange,
@@ -34,17 +38,40 @@ const Task = ({
     { name: "December", short: "Dec" },
   ];
 
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
   const { darkMode } = useContext(DarkModeContext);
+
+  const [mouseOver, setMouseOver] = useState(false);
 
   const formattedDate =
     monthOptions[date.getMonth()].short + " " + date.getDate();
 
   return (
     <div
-      className={`flex w-full justify-between py-2 border-b border-b-gray-300 ${
+      ref={setNodeRef}
+      onMouseEnter={() => setMouseOver(true)}
+      onMouseLeave={() => setMouseOver(false)}
+      style={{
+        touchAction: "none",
+        transform: transform ? CSS.Transform.toString(transform) : undefined,
+        transition,
+      }}
+      className={`${
+        activeId === id && "backdrop-blur-xl brightness-115 z-10"
+      } flex relative w-full justify-between py-2 border-b border-b-gray-300 px-4 ${
         darkMode ? "text-gray-200" : "text-gray-800"
       }`}
     >
+      <LuGripVertical
+        {...attributes}
+        {...listeners}
+        onMouseDown={(e) => e.preventDefault()}
+        className={`grip-handle absolute -left-1 top-1/2 transform -translate-y-1/2 cursor-pointer ${
+          !mouseOver && "md:hidden"
+        }`}
+      />
       <TaskTitle
         onTaskSelect={onTaskSelect}
         title={title}
