@@ -49,7 +49,7 @@ const TaskMobile = ({ task, activeId, index, handlers }) => {
       style={{
         transform: transform ? CSS.Transform.toString(transform) : undefined,
         transition,
-        touchAction: "none",
+        touchAction: "pan-y",
       }}
       className={`
         ${touchActive && "backdrop-blur-md ring-2 ring-blue-500 z-10"}
@@ -57,17 +57,20 @@ const TaskMobile = ({ task, activeId, index, handlers }) => {
         w-full mx-auto rounded-xl shadow-md  border-1 border-gray-400
         ${darkMode ? "text-gray-200" : "text-gray-800"}
         px-1 py-1 flex flex-col relative
-        card-mobile flex-1 min-w-56 gap-2
+        card-mobile flex-1 min-w-56 gap-2 scroll-auto
       `}
-      onTouchStart={() => setTouchActive(true)}
-      onTouchEnd={() => setTouchActive(false)}
     >
-      <div className="absolute right-1 top-2">
+      <div
+        className="absolute right-1 top-2"
+        onTouchStart={() => setTouchActive(true)}
+        onTouchEnd={() => setTouchActive(false)}
+      >
         <LuGripVertical
+          style={{ touchAction: "none" }}
           {...attributes}
           {...listeners}
           size={18}
-          className="text-gray-400 z-50"
+          className="text-gray-400 z-50 ring-0"
         />
       </div>
 
