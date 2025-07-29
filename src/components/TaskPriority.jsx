@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import Dropdown from "./Dropdown";
 import { useOutsideClick } from "../hooks/useOutsideClick";
+import { priorityOptions } from "../data/OptionsData";
 
 export const TaskPriority = ({ priority, darkMode, onPriorityChange, id }) => {
   const [visible, setVisible] = useState(false);
@@ -10,26 +11,7 @@ export const TaskPriority = ({ priority, darkMode, onPriorityChange, id }) => {
 
   useOutsideClick([priorityRef, dropdownRef], () => setVisible(false));
 
-  const values = [
-    {
-      name: "low",
-      textColor: "text-green-700",
-      darkText: "text-green-300",
-      //   bgColor: "bg-green-300",
-    },
-    {
-      name: "mid",
-      textColor: "text-amber-700",
-      darkText: "text-amber-300",
-      //   bgColor: "bg-amber-300",
-    },
-    {
-      name: "high",
-      textColor: "text-red-700",
-      darkText: "text-red-300",
-      //   bgColor: "bg-red-300",
-    },
-  ];
+  const values = priorityOptions;
 
   return (
     <div
@@ -51,7 +33,7 @@ export const TaskPriority = ({ priority, darkMode, onPriorityChange, id }) => {
               : darkMode
               ? "bg-red-800 text-red-300"
               : "bg-red-300 text-red-800"
-          } md:px-4 px-2 py-1 mx-2 w-full text-center rounded-md cursor-pointer text-md md:text-lg sm:text-md text-sm relative`}
+          } md:px-4 px-0 py-1 mx-0 w-full text-center rounded-md cursor-pointer text-md md:text-lg sm:text-md text-sm relative`}
         >
           {priority}
         </p>

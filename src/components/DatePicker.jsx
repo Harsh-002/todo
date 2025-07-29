@@ -19,8 +19,8 @@ const DatePicker = ({ date, darkMode, formattedDate, id, onDateChange }) => {
       className="text-gray-500 font-bold flex-1 flex justify-center items-center cursor-pointer relative"
     >
       <LuCalendar
-        className={`text-lg text-md md:text-lg sm:text-md absolute md:left-4 left-0 ${
-          date.getDate() < new Date().getDate()
+        className={`text-lg text-md md:text-lg sm:text-sm ${
+          date < new Date()
             ? "text-red-400"
             : darkMode
             ? "text-gray-300"
@@ -29,7 +29,7 @@ const DatePicker = ({ date, darkMode, formattedDate, id, onDateChange }) => {
       />
       <p
         className={`md:pl-4 pl-1 text-md md:text-lg sm:text-md text-sm ${
-          date.getDate() < new Date().getDate()
+          date < new Date()
             ? "text-red-400"
             : darkMode
             ? "text-gray-300"

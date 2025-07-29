@@ -7,6 +7,7 @@ const TaskHeader = ({
   selectAll,
   checkSelected,
   handleDeleteTasks,
+  isMobile,
 }) => {
   const { darkMode } = useContext(DarkModeContext);
 
@@ -23,7 +24,7 @@ const TaskHeader = ({
         >
           {selectAll ? <LuCheck /> : ""}
         </div>
-        Task
+        {isMobile ? "Select All" : "Task"}
         <div className={`mx-5 ${!checkSelected() && "hidden"}`}>
           <LuTrash2
             onClick={handleDeleteTasks}
@@ -31,16 +32,19 @@ const TaskHeader = ({
           />
         </div>
       </div>
-
-      <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
-        Due Date
-      </div>
-      <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
-        Priority
-      </div>
-      <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
-        Status
-      </div>
+      {!isMobile && (
+        <>
+          <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
+            Due Date
+          </div>
+          <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
+            Priority
+          </div>
+          <div className="font-bold md:text-lg sm:text-md text-sm flex-1 text-center">
+            Status
+          </div>
+        </>
+      )}
     </div>
   );
 };

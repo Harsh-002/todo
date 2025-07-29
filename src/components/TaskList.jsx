@@ -4,6 +4,10 @@ import empty from "../assets/lotties/empty.json";
 import { saveToLocalStorage } from "../services/localStorage";
 import { useContext, useEffect, useState } from "react";
 import { TasksContext } from "../context/TasksContext";
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from "@dnd-kit/modifiers";
 import TaskHeader from "./TaskHeader";
 import {
   updateDateChange,
@@ -24,8 +28,9 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import TaskMobile from "./TaskMobile";
 
-const TaskList = ({ tasks }) => {
+const TaskList = ({ tasks, isMobile }) => {
   const [selectAll, setSelectAll] = useState(false);
   const [lastSelectedIndex, setLastSelectedIndex] = useState(null);
   const [activeId, setActiveId] = useState(null);
@@ -37,8 +42,8 @@ const TaskList = ({ tasks }) => {
     useSensor(PointerSensor),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 200, // a delay to prevent accidental scrolls while dragging
-        tolerance: 5, // minimum move to activate drag
+        delay: 100, // a delay to prevent accidental scrolls while dragging
+        tolerance: 10, // minimum move to activate drag
       },
     }),
     useSensor(KeyboardSensor)
@@ -136,14 +141,15 @@ const TaskList = ({ tasks }) => {
   };
 
   const handleDragEnd = (event) => {
-    setActiveId(null);
     const { active, over } = event;
     if (active.id !== over.id) {
       const oldIndex = tasks.findIndex((t) => t.id === active.id);
       const newIndex = tasks.findIndex((t) => t.id === over.id);
-      setTasks(arrayMove(tasks, oldIndex, newIndex));
-      saveToLocalStorage(arrayMove(tasks, oldIndex, newIndex));
+      const updatedTasks = arrayMove(tasks, oldIndex, newIndex);
+      setTasks(updatedTasks);
+      saveToLocalStorage(updatedTasks);
     }
+    setActiveId(null);
   };
 
   return (
@@ -152,35 +158,66 @@ const TaskList = ({ tasks }) => {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       sensors={sensors}
+      modifiers={
+        isMobile
+          ? [restrictToWindowEdges]
+          : [restrictToVerticalAxis, restrictToWindowEdges]
+      }
     >
-      <div className="my-2 flex flex-col">
-        <TaskHeader
-          handleSelectAll={handleSelectAll}
-          selectAll={selectAll}
-          checkSelected={checkSelected}
-          handleDeleteTasks={handleDeleteTasks}
-        />
-        <SortableContext items={tasks.map((t) => t.id)}>
-          {tasks.map((task, index) => (
-            <Task
-              key={task.id}
-              id={task.id}
-              activeId={activeId}
-              index={index}
-              date={task.date}
-              priority={task.priority}
-              status={task.status}
-              title={task.title}
-              selected={task.selected}
-              onTitleChange={handleTitleChange}
-              onDateChange={handleDateChange}
-              onTaskSelect={handleTaskSelect}
-              onPriorityChange={handlePriorityChange}
-              onStatusChange={handleStatusChange}
-            />
-          ))}
-        </SortableContext>
-      </div>
+      {isMobile ? (
+        <div className="flex flex-wrap gap-2">
+          <TaskHeader
+            handleSelectAll={handleSelectAll}
+            selectAll={selectAll}
+            checkSelected={checkSelected}
+            handleDeleteTasks={handleDeleteTasks}
+            isMobile={isMobile}
+          />
+          <SortableContext items={tasks.map((t) => t.id)}>
+            {tasks.map((task, index) => (
+              <TaskMobile
+                key={task.id}
+                task={task}
+                index={index}
+                activeId={activeId}
+                handlers={{
+                  onTitleChange: handleTitleChange,
+                  onDateChange: handleDateChange,
+                  onTaskSelect: handleTaskSelect,
+                  onPriorityChange: handlePriorityChange,
+                  onStatusChange: handleStatusChange,
+                }}
+              />
+            ))}
+          </SortableContext>
+        </div>
+      ) : (
+        <div className="my-2 flex flex-col">
+          <TaskHeader
+            handleSelectAll={handleSelectAll}
+            selectAll={selectAll}
+            checkSelected={checkSelected}
+            handleDeleteTasks={handleDeleteTasks}
+          />
+          <SortableContext items={tasks.map((t) => t.id)}>
+            {tasks.map((task, index) => (
+              <Task
+                key={task.id}
+                task={task}
+                index={index}
+                activeId={activeId}
+                handlers={{
+                  onTitleChange: handleTitleChange,
+                  onDateChange: handleDateChange,
+                  onTaskSelect: handleTaskSelect,
+                  onPriorityChange: handlePriorityChange,
+                  onStatusChange: handleStatusChange,
+                }}
+              />
+            ))}
+          </SortableContext>
+        </div>
+      )}
     </DndContext>
   );
 };

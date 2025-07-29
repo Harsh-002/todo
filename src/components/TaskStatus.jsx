@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import Dropdown from "./Dropdown";
 import { useOutsideClick } from "../hooks/useOutsideClick";
+import { statusOptions } from "../data/OptionsData";
 
 const TaskStatus = ({ darkMode, onStatusChange, id, status }) => {
   const statusRef = useRef();
@@ -14,31 +15,12 @@ const TaskStatus = ({ darkMode, onStatusChange, id, status }) => {
     setStatusVisible(false)
   );
 
-  const values = [
-    {
-      name: "done",
-      textColor: "text-green-700",
-      darkText: "text-green-300",
-      //   bgColor: "bg-green-300",
-    },
-    {
-      name: "todo",
-      textColor: "text-gray-700",
-      darkText: "text-gray-300",
-      //   bgColor: "bg-gray-300",
-    },
-    {
-      name: "in-progess",
-      textColor: "text-amber-700",
-      darkText: "text-amber-300",
-      //   bgColor: "bg-amber-300",
-    },
-  ];
+  const values = statusOptions;
 
   return (
     <div
       onClick={() => setStatusVisible(!statusVisible)}
-      className=" flex-1 flex items-center justify-center relative"
+      className="flex-1 flex items-center justify-center relative"
     >
       <div className="relative w-5/6">
         <p
@@ -55,9 +37,9 @@ const TaskStatus = ({ darkMode, onStatusChange, id, status }) => {
               : darkMode
               ? "bg-yellow-800 text-yellow-300"
               : "bg-yellow-300 text-yellow-800"
-          } md:px-4 w-full mx-2 text-center px-2 py-1 rounded-md  cursor-pointer text-md md:text-lg sm:text-md text-sm`}
+          } md:px-4 w-full mx-0 text-center px-2 py-1 rounded-md  cursor-pointer text-md md:text-lg sm:text-md text-sm`}
         >
-          {status}
+          {status === "in-progress" ? "ongoing" : status}
         </p>
         <Dropdown
           ref={statusDropdownRef}

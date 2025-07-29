@@ -8,6 +8,8 @@ import { TasksContext } from "../context/TasksContext";
 import Dropdown from "../components/Dropdown";
 import { generateRandomId } from "../utils/commonFunctions";
 import { useOutsideClick } from "../hooks/useOutsideClick";
+import { useIsMobile } from "../hooks/useIsMobile";
+import { sortOptionsData } from "../data/OptionsData";
 
 // Main task view container
 const TaskViewMain = ({ searchValue }) => {
@@ -51,30 +53,7 @@ const TaskViewMain = ({ searchValue }) => {
 
   useOutsideClick([ref], () => setVisible(false));
 
-  const sortOptions = [
-    {
-      name: "priority",
-      subOptions: [
-        {
-          name: "low first",
-        },
-        {
-          name: "high first",
-        },
-      ],
-    },
-    {
-      name: "date",
-      subOptions: [
-        {
-          name: "closest first",
-        },
-        {
-          name: "farthest first",
-        },
-      ],
-    },
-  ];
+  const sortOptions = sortOptionsData;
 
   // Function to sort tasks based on value (using chatGPT)
   const handleSort = (id, value) => {
@@ -99,6 +78,8 @@ const TaskViewMain = ({ searchValue }) => {
     setTasks(updatedTasks);
     saveToLocalStorage(updatedTasks);
   };
+
+  const isMobile = useIsMobile();
 
   return (
     <div
@@ -137,7 +118,7 @@ const TaskViewMain = ({ searchValue }) => {
           <LuPlus />
         </div>
       </div>
-      <TaskList tasks={filteredTasks} />
+      <TaskList tasks={filteredTasks} isMobile={isMobile} />
     </div>
   );
 };

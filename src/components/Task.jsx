@@ -8,21 +8,7 @@ import { LuGripVertical } from "react-icons/lu";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const Task = ({
-  date,
-  priority,
-  status,
-  title,
-  id,
-  activeId,
-  index,
-  onTitleChange,
-  onDateChange,
-  selected,
-  onTaskSelect,
-  onPriorityChange,
-  onStatusChange,
-}) => {
+const Task = ({ task, activeId, index, handlers }) => {
   const monthOptions = [
     { name: "January", short: "Jan" },
     { name: "February", short: "Feb" },
@@ -37,6 +23,16 @@ const Task = ({
     { name: "November", short: "Nov" },
     { name: "December", short: "Dec" },
   ];
+
+  const { id, date, priority, status, title, selected } = task;
+
+  const {
+    onTitleChange,
+    onDateChange,
+    onTaskSelect,
+    onPriorityChange,
+    onStatusChange,
+  } = handlers;
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -69,7 +65,7 @@ const Task = ({
         {...listeners}
         onMouseDown={(e) => e.preventDefault()}
         className={`grip-handle absolute -left-1 top-1/2 transform -translate-y-1/2 cursor-pointer ${
-          !mouseOver && "md:hidden"
+          !mouseOver && "lg:hidden"
         }`}
       />
       <TaskTitle
