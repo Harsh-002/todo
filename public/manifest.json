@@ -1,0 +1,21 @@
+{
+  "name": "ToDo",
+  "short_name": "ViteApp",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#317EFB",
+  "description": "ToDo",
+  "icons": [
+    {
+      "src": "/daily-planning.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/daily-planning.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
